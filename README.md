@@ -78,3 +78,11 @@ De terugkeerpagina is bewust geen betalingsbevestiging. Er is voor deze losse sa
 De API-adapter is met gesimuleerde Mollie-antwoorden getest. Een echte sandboxtest vereist jouw account, testkey en HTTPS-hosting en is nog niet uitgevoerd. De latere vestiging in Suriname vraagt een nieuwe beoordeling van providerbeschikbaarheid, bedrijfsentiteit en uitbetalingsrekening.
 
 Officiële API-documentatie: https://docs.mollie.com/reference/create-payment
+
+## Uitbreiding Surinaamse collectie
+
+27 aangeleverde modelgroepen zijn toegevoegd: 10 ringen, 7 armbanden en 10 hangers, naast de 6 oorspronkelijke voorbeelden. Cachetringen noemen rood, zwart, wit, blauw, groen en Alakondre; kruis hangers noemen met en zonder stenen. Kleuren zijn geplande uitvoeringen, geen voorraadclaims. Alle modellen blijven demo en hebben geen prijs.
+
+De drie collectiebeelden onder public/assets zijn eigen, fotorealistische AI-sfeerbeelden. De pagina duidt deze expliciet aan. Ze tonen geen specifieke leverbare modellen. De producttekeningen blijven schematische categorie-illustraties, zodat onbekende traditionele ontwerpen niet als echte productfoto worden gepresenteerd. Zie docs/beeldverantwoording.md voor prompts en herkomst.
+
+Een gedateerde interne prijsvergelijking staat in docs/prijsvoorstel.md. De berekende 5%-bedragen zijn geen verkoopprijzen; de eigen productspecificaties en kostprijs moeten eerst worden bevestigd.

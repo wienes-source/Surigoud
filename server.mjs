@@ -31,8 +31,8 @@ export const server=http.createServer(async(req,res)=>{
   let raw='';try{for await(const chunk of req){raw+=chunk;if(Buffer.byteLength(raw)>8192)return json(413,{error:'Verzoek te groot.'});}const result=validateCheckout(JSON.parse(raw));return json(result.status,{error:result.error});}catch{return json(400,{error:'Ongeldige JSON.'});}
  }
  if(!['GET','HEAD'].includes(req.method))return json(405,{error:'Methode niet toegestaan.'});
- const routes={'/':'index.html','/index.html':'index.html','/style.css':'style.css','/app.js':'app.js','/catalog.js':'catalog.js','/betaling-test':'payment-test.html','/payment-test.js':'payment-test.js'};
+ const routes={'/':'index.html','/index.html':'index.html','/style.css':'style.css','/app.js':'app.js','/catalog.js':'catalog.js','/betaling-test':'payment-test.html','/payment-test.js':'payment-test.js','/assets/ringen.jpg':'assets/ringen.jpg','/assets/armbanden.jpg':'assets/armbanden.jpg','/assets/hangers.jpg':'assets/hangers.jpg'};
  if(!routes[pathname]){res.writeHead(404);return res.end('Pagina niet gevonden');}
- try{const data=await readFile(new URL('./public/'+routes[pathname],import.meta.url));res.writeHead(200,{'Content-Type':({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8'})[extname(routes[pathname])]});res.end(req.method==='HEAD'?undefined:data);}catch{res.writeHead(500);res.end('Pagina tijdelijk niet beschikbaar');}
+ try{const data=await readFile(new URL('./public/'+routes[pathname],import.meta.url));res.writeHead(200,{'Content-Type':({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.jpg':'image/jpeg'})[extname(routes[pathname])]});res.end(req.method==='HEAD'?undefined:data);}catch{res.writeHead(500);res.end('Pagina tijdelijk niet beschikbaar');}
 });
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))server.listen(Number(process.env.PORT)||3000,'127.0.0.1',()=>console.log(`Surigoud: http://localhost:${Number(process.env.PORT)||3000}`));
