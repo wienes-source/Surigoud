@@ -62,3 +62,19 @@ Bedrijfsidentiteit en contact, geverifieerde producten en rechten op foto's, pri
 ## Ontwerpbron
 
 https://fajalobiejuwelier.nl is bekeken als referentie voor goudhandel en persoonlijke service. Surigoud heeft een eigen visuele uitwerking; geen affiliatie of overgenomen bedrijfsclaims. De SVG's zijn illustratief en tonen geen leverbare producten.
+
+## Mollie-koppeling voor de Nederlandse vestiging
+
+Er is een afzonderlijke sandboxintegratie toegevoegd via `/betaling-test`. De winkelwagen en `/api/checkout` blijven voorbeeldproducten weigeren. Deze integratie accepteert uitsluitend `test_`-sleutels en verwerkt geen echte betalingen. Het fictieve bedrag van € 1,00 is alleen zichtbaar op de afzonderlijke testpagina, nooit als verkoopprijs.
+
+1. Maak zelf een account aan bij https://my.mollie.com en doorloop de vereiste bedrijfsverificatie voor je Nederlandse vestiging.
+2. Haal de **test API key** op in het Mollie-dashboard. Zet deze uitsluitend in de serveromgeving, niet in GitHub, de browser of een chat.
+3. Stel `MOLLIE_API_KEY`, `PUBLIC_BASE_URL` (het publieke HTTPS-hoofddomein, zonder subpad) en `ENABLE_MOLLIE_TEST=true` in op de Node-hosting. Zie `.env.example` voor de namen; een .env-bestand wordt niet automatisch ingelezen door npm start. Gebruik hosting secrets of Node met `--env-file=.env`.
+4. Open `https://jouw-domein/betaling-test` en klik op Start Mollie-test. De Mollie-sandbox simuleert de uitkomst; er vindt geen geldtransactie of levering plaats. Bij statische hosting werkt de test-API niet.
+5. Zet `ENABLE_MOLLIE_TEST=false` na het testen. De server beperkt de test tot één nieuw verzoek per minuut en accepteert alleen de ingestelde browser-origin.
+
+De terugkeerpagina is bewust geen betalingsbevestiging. Er is voor deze losse sandbox geen orderopslag of webhook: er wordt niets geleverd op basis van de testuitkomst. Voor echte verkoop blijven duurzame orders, voorraadreservering, geverifieerde statusophaling via webhooks, verzendgegevens en een aparte live-implementatie nodig. De API weigert live-sleutels ook als iemand de configuratie wijzigt. Automatiseer live activering dus niet door alleen een sleutel te wisselen.
+
+De API-adapter is met gesimuleerde Mollie-antwoorden getest. Een echte sandboxtest vereist jouw account, testkey en HTTPS-hosting en is nog niet uitgevoerd. De latere vestiging in Suriname vraagt een nieuwe beoordeling van providerbeschikbaarheid, bedrijfsentiteit en uitbetalingsrekening.
+
+Officiële API-documentatie: https://docs.mollie.com/reference/create-payment

@@ -1,0 +1,8 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {testConfig,createTestPayment} from '../mollie.mjs';
+const env={ENABLE_MOLLIE_TEST:'true',MOLLIE_API_KEY:'test_fake',PUBLIC_BASE_URL:'https://shop.example'};
+test('alleen expliciete testconfiguratie en HTTPS toegestaan',()=>{for(const changes of [{ENABLE_MOLLIE_TEST:'false'},{MOLLIE_API_KEY:'live_fake'},{PUBLIC_BASE_URL:'http://shop.example'},{PUBLIC_BASE_URL:'https://shop.example/submap'}])assert.throws(()=>testConfig({...env,...changes}));});
+test('bedrag en omschrijving komen van server, alleen Mollie checkout toegestaan',async()=>{let calls=0;const result=await createTestPayment({env,fetcher:async(url,options)=>{calls++;assert.equal(url,'https://api.mollie.com/v2/payments');assert.equal(options.headers.Authorization,'Bearer test_fake');assert.ok(options.headers['Idempotency-Key']);const body=JSON.parse(options.body);assert.deepEqual(body.amount,{currency:'EUR',value:'1.00'});assert.equal(body.redirectUrl,'https://shop.example/betaling-test');return {ok:true,json:async()=>({mode:'test',_links:{checkout:{href:'https://www.mollie.com/checkout/test'}}})};}});assert.equal(calls,1);assert.equal(result.checkoutUrl,'https://www.mollie.com/checkout/test');});
+test('live antwoorden en onveilige redirects worden geweigerd',async()=>{for(const payment of [{mode:'live'},{mode:'test',_links:{checkout:{href:'https://mollie.com.attacker.example'}}}])await assert.rejects(createTestPayment({env,fetcher:async()=>({ok:true,json:async()=>payment})}));});
+test('providerfouten lekken geen details of sleutel',async()=>{await assert.rejects(createTestPayment({env,fetcher:async()=>({ok:false})}),/tijdelijk niet beschikbaar/);});
